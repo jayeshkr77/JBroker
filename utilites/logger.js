@@ -26,7 +26,7 @@ let errorLogs = winston.format.combine(
         format: "YY-MM-DD HH:MM:SS"
     }),
     winston.format.printf(
-        info => `${info.timestamp}  ${info.message}`
+        error => `${error.timestamp}  ${error.message}`
     )
 );
 
@@ -46,10 +46,12 @@ const logger = winston.createLogger({
 if (process.env.NODE_ENV !== 'production') {
     logger.add(new (winston.transports.Console)({
         format: winston.format.combine(winston.format.colorize(), alignColorsAndTime)
-    ,level:'info'}));
+        , level: 'info'
+    }));
     logger.add(new (winston.transports.Console)({
         format: winston.format.combine(winston.format.colorize(), errorLogs)
-    ,level:'error'}));
+        , level: 'error'
+    }));
 } else {
     logger.add(new winston.transports.File({ filename: 'logs/error.log', level: 'error' }));
     logger.add(new winston.transports.File({ filename: 'logs/combined.log' }));

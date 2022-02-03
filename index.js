@@ -4,8 +4,9 @@ const jwt = require('jsonwebtoken');
 require("dotenv").config();
 const logger = require('./utilites/logger');
 const loggerMiddleware = require('./middlewares/logger');
+const dataSyncMiddleware = require('./middlewares/dataSyncMiddleware');
 
-const {serverSetup} = require('./utilites/setupServerUtilities');
+const serverSetup = require('./utilites/setupServerUtilities');
 const apiRouter = require('./routes/api');
 
 let app = express();
@@ -17,15 +18,16 @@ app.use(express.static(__dirname + '/public'));
 app.use(cors());
 app.use(loggerMiddleware);
 
-app.get('/', async (req, res, next) => {
-    await serverSetup.client.set('key', 'value2');
-    res.send('Works');
-    next();
-})
-app.get('/t', async (req, res) => {
-    const value = await serverSetup.client.get('key');
-    res.send(value)
-})
+app.use(dataSyncMiddleware);
+// app.get('/', async (req, res, next) => {
+//     await serverSetup.redisClient.set('key', 'value2');
+//     res.send('Works');
+//     next();
+// });
+// app.get('/t', async (req, res) => {
+//     const value = await serverSetup.redisClient.get('key');
+//     res.send(value)
+// });
 
 app.use("/api/", apiRouter);
 
