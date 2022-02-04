@@ -10,10 +10,12 @@ const userSchema = new Schema({
         type:String
     },
     verified:{
-        type:Boolean
+        type:Boolean,
+        default: false
     },
     joinDate:{
-        type:Date
+        type:Date,
+        default: Date.now
     },
     trackingStocks:{
         type: Array,
